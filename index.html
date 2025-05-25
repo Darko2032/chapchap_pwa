@@ -62,10 +62,65 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>CHAP-CHAP</title>
+  <title>CHAP-CHAP - Recharge de forfaits et d'unités en Côte d'Ivoire</title>
   <link rel="manifest" href="manifest.json">
+  
+  <!-- Cache control header -->
+  <meta http-equiv="Cache-Control" content="max-age=86400">
 </head>
 <body>
+  <!-- Splash screen qui sera affiché pendant le chargement -->
+  <div class="splash" id="splash">
+    <img src="favicon.png" alt="CHAP-CHAP Logo">
+    <div class="loader"></div>
+  </div>
+  <!-- Preload des ressources critiques -->
+  <link rel="preload" href="main.dart.js" as="script">
+  <link rel="preload" href="flutter.js" as="script">
+  <link rel="preload" href="flutter_bootstrap.js" as="script">
+  <link rel="preload" href="assets/logo.png" as="image">
+  
+  <!-- Splash screen style pour un chargement progressif -->
+  <style>
+    body {
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .splash {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      background-color: #ffffff;
+      transition: opacity 0.5s ease;
+    }
+    .splash img {
+      width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #0175C2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #flutter_target { opacity: 0; transition: opacity 0.5s ease; }
+  </style>
+  
   <script src="flutter_bootstrap.js" async></script>
   <script>
     window.addEventListener('load', function(ev) {
@@ -73,14 +128,23 @@
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+            // Masquer l'écran de chargement une fois l'app chargée
+            setTimeout(function() {
+              document.getElementById('splash').style.opacity = '0';
+              document.getElementById('flutter_target').style.opacity = '1';
+              setTimeout(function() { 
+                document.getElementById('splash').style.display = 'none';
+              }, 500);
+            }, 500);
+          });
         }
-      }).then(function(engineInitializer) {
-        return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
-        return appRunner.runApp();
       });
     });
-    
+  </script>
     // Enregistrement du Service Worker pour PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function() {
