@@ -1,0 +1,21 @@
+services:
+  # Service pour le site web statique (PWA)
+  - type: web
+    name: chap-chap-pwa
+    runtime: static
+    buildCommand: flutter build web --release
+    staticPublishPath: ./build/web
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: max-age=31536000
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: FLUTTER_VERSION
+        value: stable
