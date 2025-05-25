@@ -1,0 +1,71 @@
+# Fichier .htaccess optimisé pour PWA sur Ionos
+# À placer dans le répertoire racine de votre site
+
+# Activer la compression pour améliorer la vitesse de chargement
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json application/manifest+json
+</IfModule>
+
+# Définir la mise en cache du navigateur pour les ressources statiques
+<IfModule mod_expires.c>
+  ExpiresActive On
+  
+  # Images
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  
+  # Fichiers de l'application
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  
+  # Manifest PWA et Service Worker
+  ExpiresByType application/manifest+json "access plus 1 hour"
+  
+  # HTML par défaut - pas de cache long pour les mises à jour
+  ExpiresByType text/html "access plus 1 hour"
+</IfModule>
+
+# Ajout des en-têtes de sécurité
+<IfModule mod_headers.c>
+  # Permettre le Service Worker
+  Header set Service-Worker-Allowed "/"
+  
+  # Protection contre le clickjacking
+  Header set X-Frame-Options "SAMEORIGIN"
+  
+  # Protection XSS
+  Header set X-XSS-Protection "1; mode=block"
+  
+  # Empêcher le MIME-sniffing
+  Header set X-Content-Type-Options "nosniff"
+  
+  # Politique de sécurité du contenu (CSP)
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://api.emailjs.com; connect-src 'self' https://api.emailjs.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';"
+</IfModule>
+
+# Redirection des erreurs 404 vers index.html pour le routage côté client
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Si le fichier ou répertoire demandé n'existe pas
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Rediriger vers index.html
+  RewriteRule . index.html [L]
+</IfModule>
+
+# Empêcher l'accès au fichier .htaccess
+<Files .htaccess>
+  Require all denied
+</Files>
+
+# Empêcher l'accès aux fichiers .json sauf manifest.json
+<FilesMatch "\.json$">
+  <If "%{REQUEST_URI} !~ /manifest\.json$">
+    Require all denied
+  </If>
+</FilesMatch>
