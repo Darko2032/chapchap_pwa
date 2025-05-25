@@ -1,0 +1,7 @@
+# Cloudflare Pages configuration
+name = "chapchap"
+compatibility_date = "2025-05-25"
+workers_dev = true
+
+[site]
+bucket = "."
