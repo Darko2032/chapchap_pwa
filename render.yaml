@@ -1,0 +1,20 @@
+services:
+  # Service pour le site web statique (PWA)
+  - type: static
+    name: chap-chap
+    buildCommand: chmod +x render-build.sh && ./render-build.sh
+    staticPublishPath: ./public
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: max-age=31536000
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Service-Worker-Allowed
+        value: /
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

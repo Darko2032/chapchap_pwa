@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHAP-CHAP - Hors ligne</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      text-align: center;
+      color: #333;
+    }
+    .container {
+      max-width: 90%;
+      width: 400px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      color: #666;
+    }
+    .button {
+      background-color: #0175C2;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #016099;
+    }
+    .network-status {
+      margin-top: 20px;
+      padding: 8px 16px;
+      background-color: #ff6b6b;
+      color: white;
+      border-radius: 16px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="icons/apple-touch-icon.png" alt="CHAP-CHAP Logo" class="logo">
+    <h1>Vous êtes hors ligne</h1>
+    <p>CHAP-CHAP nécessite une connexion internet pour fonctionner correctement. Veuillez vérifier votre connexion et réessayer.</p>
+    <a href="/" class="button">Réessayer</a>
+    <div class="network-status">Aucune connexion réseau détectée</div>
+  </div>
+
+  <script>
+    // Vérifier régulièrement la connexion
+    setInterval(() => {
+      if (navigator.onLine) {
+        window.location.reload();
+      }
+    }, 5000);
+
+    // Rafraîchir lors du retour en ligne
+    window.addEventListener('online', () => {
+      window.location.reload();
+    });
+  </script>
+</body>
+</html>
