@@ -1,8 +1,7 @@
 services:
   # Service pour le site web statique (PWA)
-  - type: web
+  - type: static
     name: chap-chap
-    runtime: static
     buildCommand: chmod +x render-build.sh && ./render-build.sh
     staticPublishPath: ./public
     headers:
